@@ -17,10 +17,11 @@
             android:layout_gravity="center_horizontal">
 
             <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:id="@+id/imageView"
-                android:layout_margin="30dp"/>
+                android:layout_margin="20dp"
+                android:src="@drawable/imagePlaceholder"/>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -41,6 +42,14 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Medium Text"
+                    android:id="@+id/reviewByText"
+                    android:layout_margin="5dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
                     android:id="@+id/foodPriceText"
                     android:layout_margin="5dp"/>
 
@@ -53,31 +62,37 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/oneCheckBox" />
+                        android:id="@+id/oneCheckBox"
+                        android:checked="false"
+                        android:clickable="false" />
 
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/twoCheckBox"
-                        android:checked="false" />
+                        android:checked="false"
+                        android:clickable="false"/>
 
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/threeCheckBox"
-                        android:checked="false" />
+                        android:checked="false"
+                        android:clickable="false"/>
 
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/fourCheckBox"
-                        android:checked="false" />
+                        android:checked="false"
+                        android:clickable="false"/>
 
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/fiveCheckBox"
-                        android:checked="false" />
+                        android:checked="false"
+                        android:clickable="false"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -95,21 +110,24 @@
                 android:layout_height="wrap_content"
                 android:text="Description"
                 android:id="@+id/descriptionButton"
-                android:layout_weight="6"/>
+                android:layout_weight="6"
+                android:onClick="openDescription"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Edit"
                 android:id="@+id/editButton"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="editReview"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Delete"
                 android:id="@+id/deleteButton"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="deleteReview"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

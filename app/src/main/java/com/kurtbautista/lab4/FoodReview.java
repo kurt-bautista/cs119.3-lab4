@@ -3,17 +3,20 @@ package com.kurtbautista.lab4;
 /**
  * Created by Student on 6/30/2016.
  */
-public class Food {
+public class FoodReview {
 
     private String name;
+
+    private String user;
     private double price;
     private String description;
     private int rating;
     private String filename;
 
-    public Food(String name, double price, String description, int rating)
+    public FoodReview(String name, String user, double price, String description, int rating)
     {
         this.name = name;
+        this.user = user;
         this.price = price;
         this.description = description;
         this.rating = rating;
@@ -57,6 +60,14 @@ public class Food {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
 }
