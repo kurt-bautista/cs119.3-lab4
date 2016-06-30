@@ -1,6 +1,8 @@
 package com.kurtbautista.lab4;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ListViewCompat;
@@ -37,9 +39,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteReview(View v)
     {
-        //Add an alert dialog before delete
-        int i = (Integer)v.getTag();
-        foodReviewList.remove(i);
-        adapter.notifyDataSetChanged();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to delete this review?")
+                .setCancelable(false)
+                .setPositiveButton("DELETE!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int x = (Integer)v.getTag();
+                        foodReviewList.remove(x);
+                        adapter.notifyDataSetChanged();
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
