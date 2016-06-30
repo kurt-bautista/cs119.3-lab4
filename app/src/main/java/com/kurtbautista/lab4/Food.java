@@ -9,6 +9,7 @@ public class Food {
     private double price;
     private String description;
     private int rating;
+    private String filename;
 
     public Food(String name, double price, String description, int rating)
     {
@@ -48,6 +49,14 @@ public class Food {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
 }
