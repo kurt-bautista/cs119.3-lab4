@@ -1,9 +1,11 @@
 package com.kurtbautista.lab4;
 
+import java.io.Serializable;
+
 /**
  * Created by Student on 6/30/2016.
  */
-public class FoodReview {
+public class FoodReview implements Serializable {
 
     private String name;
     private String user;

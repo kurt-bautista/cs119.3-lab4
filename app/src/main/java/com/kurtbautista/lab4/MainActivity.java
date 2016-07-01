@@ -2,6 +2,7 @@ package com.kurtbautista.lab4;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void newReview(View v)
     {
-        //
+        Intent i = new Intent(this, com.kurtbautista.lab4.NewEditReviewActivity.class);
+        i.putExtra("action", "New food review");
+        startActivity(i);
+        adapter.notifyDataSetChanged();
     }
 
     private void openDescription(View v)
@@ -40,18 +44,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void editReview(View v)
     {
-        //Edit dialog
+        Intent i = new Intent(this, com.kurtbautista.lab4.NewEditReviewActivity.class);
+        i.putExtra("action", "Edit review");
+        i.putExtra("review", foodReviewList.get((Integer)v.getTag()));
+        startActivity(i);
+        adapter.notifyDataSetChanged();
     }
 
-    private void deleteReview(final View v)
+    private void deleteReview(View v)
     {
+        final View view = v;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete this review?")
                 .setCancelable(false)
                 .setPositiveButton("DELETE!", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        int x = (Integer)v.getTag();
+                        int x = (Integer)view.getTag();
                         foodReviewList.remove(x);
                         adapter.notifyDataSetChanged();
                         dialogInterface.dismiss();
@@ -65,5 +74,11 @@ public class MainActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void clearReviews(View v)
+    {
+        foodReviewList.clear();
+        adapter.notifyDataSetChanged();
     }
 }

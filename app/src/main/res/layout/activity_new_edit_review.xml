@@ -152,7 +152,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/save"
                 android:id="@+id/saveButton"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:onClick="saveReview"/>
 
         </LinearLayout>
 
