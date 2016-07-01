@@ -6,12 +6,12 @@ package com.kurtbautista.lab4;
 public class FoodReview {
 
     private String name;
-
     private String user;
     private double price;
     private String description;
     private int rating;
     private String filename;
+    private String comment;
 
     public FoodReview(String name, String user, double price, String description, int rating)
     {
@@ -68,6 +68,14 @@ public class FoodReview {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
 }

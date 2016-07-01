@@ -22,14 +22,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView lv = (ListView)findViewById(R.id.listView);
+        ListView lv = (ListView)findViewById(R.id.reviewsListView);
         adapter = new FoodReviewAdapter(this, foodReviewList);
         lv.setAdapter(adapter);
     }
 
+    private void newReview(View v)
+    {
+        //
+    }
+
     private void openDescription(View v)
     {
-        //Open activity with description
+        DescriptionDialog d = new DescriptionDialog(this, foodReviewList.get((Integer)v.getTag()));
+        d.show();
     }
 
     private void editReview(View v)
@@ -37,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         //Edit dialog
     }
 
-    private void deleteReview(View v)
+    private void deleteReview(final View v)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete this review?")
