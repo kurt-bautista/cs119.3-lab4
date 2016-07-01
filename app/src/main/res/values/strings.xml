@@ -2,4 +2,9 @@
     <string name="app_name">Lab 4</string>
     <string name="description_label">Description</string>
     <string name="comment_label">Comment</string>
+    <string name="name">Name</string>
+    <string name="user">Review by</string>
+    <string name="price">Price</string>
+    <string name="rating">Rating</string>
+    <string name="save">Save</string>
 </resources>
