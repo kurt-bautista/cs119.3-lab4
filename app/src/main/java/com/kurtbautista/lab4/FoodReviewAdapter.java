@@ -1,6 +1,8 @@
 package com.kurtbautista.lab4;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,6 +10,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -58,7 +62,9 @@ public class FoodReviewAdapter extends BaseAdapter {
 
             FoodReview review = foodReviews.get(i);
 
-            //img.setImageResource();
+            //Picasso.with(context).load(review.getThumbnail()).fit().into(img);
+            Bitmap b = BitmapFactory.decodeFile(review.getThumbnail());
+            img.setImageBitmap(b);
             name.setText(review.getName().toString());
             user.setText(review.getUser().toString());
             price.setText("Php " + review.getPrice());

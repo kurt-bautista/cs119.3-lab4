@@ -14,6 +14,7 @@ public class FoodReview implements Serializable {
     private int rating;
     private String filename;
     private String comment;
+    private String thumbnail;
 
     public FoodReview(String name, String user, double price, String description, String comment, int rating, String filename)
     {
@@ -80,6 +81,14 @@ public class FoodReview implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
 }

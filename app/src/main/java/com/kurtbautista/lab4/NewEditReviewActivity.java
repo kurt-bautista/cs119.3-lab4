@@ -2,6 +2,8 @@ package com.kurtbautista.lab4;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
@@ -13,7 +15,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -41,15 +46,22 @@ public class NewEditReviewActivity extends AppCompatActivity {
             EditText desc = (EditText)findViewById(R.id.description);
             EditText comment = (EditText)findViewById(R.id.comment);
             ImageButton img = (ImageButton)findViewById(R.id.changeImageButton);
-            //RatingBar rating = (RatingBar)findViewById(R.id.ratingBar);
+            RadioButton[] rds = new RadioButton[] {(RadioButton)findViewById(R.id.radioButton), (RadioButton)findViewById(R.id.radioButton2), (RadioButton)findViewById(R.id.radioButton3),
+                    (RadioButton)findViewById(R.id.radioButton4), (RadioButton)findViewById(R.id.radioButton5)};
 
             name.setText(review.getName());
             user.setText(review.getUser());
             price.setText(String.valueOf(review.getPrice()));
             desc.setText(review.getDescription());
             comment.setText(review.getComment());
-            //set img src
-            //rating.setRating(review.getRating());
+            rds[review.getRating() - 1].setChecked(true);
+
+            Bitmap b = BitmapFactory.decodeFile(review.getFilename());
+            img.setImageBitmap(b);
+        }
+        else {
+            RadioButton r = (RadioButton)findViewById(R.id.radioButton);
+            r.setChecked(true);
         }
     }
 
@@ -98,7 +110,7 @@ public class NewEditReviewActivity extends AppCompatActivity {
                 // create rescale 640
                 // create thumbnail rescale 50
 
-                //ImageUtils.resizeSavedBitmap(outputFile.getAbsolutePath(), 100, thumbNailFile.getAbsolutePath());
+                ImageUtils.resizeSavedBitmap(outputFile.getAbsolutePath(), 110, thumbNailFile.getAbsolutePath());
                 ImageUtils.resizeSavedBitmap(outputFile.getAbsolutePath(), 145, outputFile.getAbsolutePath());
 
                 // UI updates must be done via the UI thread NOT here, this will
@@ -129,20 +141,24 @@ public class NewEditReviewActivity extends AppCompatActivity {
     private void updateImageView()
     {
         ImageButton img = (ImageButton)findViewById(R.id.changeImageButton);
-        Picasso.with(this).load(outputFile.getAbsolutePath()).fit().into(img);
+        Bitmap b = BitmapFactory.decodeFile(outputFile.getAbsolutePath());
+        img.setImageBitmap(b);
+        //Picasso.with(this).load(outputFile.getAbsolutePath()).fit().into(img);
     }
 
     //endregion
 
-    public void saveReview(View v)
-    {
-        final EditText name = (EditText)findViewById(R.id.foodName);
-        final EditText user = (EditText)findViewById(R.id.userName);
-        final EditText price = (EditText)findViewById(R.id.foodPrice);
-        final EditText desc = (EditText)findViewById(R.id.description);
-        final EditText comment = (EditText)findViewById(R.id.comment);
-        final ImageButton img = (ImageButton)findViewById(R.id.changeImageButton);
-        //RatingBar rating = (RatingBar)findViewById(R.id.ratingBar);
+    public void saveReview(View v) {
+        final EditText name = (EditText) findViewById(R.id.foodName);
+        final EditText user = (EditText) findViewById(R.id.userName);
+        final EditText price = (EditText) findViewById(R.id.foodPrice);
+        final EditText desc = (EditText) findViewById(R.id.description);
+        final EditText comment = (EditText) findViewById(R.id.comment);
+        final ImageButton img = (ImageButton) findViewById(R.id.changeImageButton);
+        final RadioGroup rating = (RadioGroup) findViewById(R.id.ratingGroup);
+
+        View rg = rating.findViewById(rating.getCheckedRadioButtonId());
+        final int index = rating.indexOfChild(rg) + 1;
 
         if (getTitle().equals("Edit review")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -155,11 +171,12 @@ public class NewEditReviewActivity extends AppCompatActivity {
                             data.putExtra("review", getIntent().getIntExtra("pos", -1));
                             data.putExtra("name", name.getText().toString());
                             data.putExtra("user", user.getText().toString());
-                            data.putExtra("price", price.getText().toString());
-                            data.putExtra("rating", 0);
+                            data.putExtra("price", Double.valueOf(price.getText().toString()));
+                            data.putExtra("rating", index);
                             data.putExtra("desc", desc.getText().toString());
                             data.putExtra("comment", comment.getText().toString());
-                            data.putExtra("filename", "gg");
+                            data.putExtra("filename", outputFile.getAbsolutePath());
+                            data.putExtra("thumbnail", thumbNailFile.getAbsolutePath());
                             setResult(RESULT_OK, data);
                             finish();
                             dialogInterface.dismiss();
@@ -174,14 +191,21 @@ public class NewEditReviewActivity extends AppCompatActivity {
                     });
             AlertDialog alert = builder.create();
             alert.show();
-        }
-        else
-        {
-            FoodReview review = new FoodReview(name.getText().toString(), user.getText().toString(), Double.valueOf(price.getText().toString()), desc.getText().toString(), comment.getText().toString(), 0, "gg"/*outputFile.getAbsoluteFile()*/);
-            Intent data = new Intent();
-            data.putExtra("review", review);
-            setResult(RESULT_OK, data);
-            finish();
+        } else {
+            try {
+                FoodReview review = new FoodReview(name.getText().toString(), user.getText().toString(), Double.valueOf(price.getText().toString()), desc.getText().toString(), comment.getText().toString(), index, outputFile.getAbsolutePath());
+                review.setThumbnail(thumbNailFile.getAbsolutePath());
+                Intent data = new Intent();
+                data.putExtra("review", review);
+                setResult(RESULT_OK, data);
+                finish();
+            }
+            catch (NumberFormatException e) {
+                Toast.makeText(this, "All fields needed", Toast.LENGTH_SHORT).show();
+            }
+            catch (NullPointerException e) {
+                Toast.makeText(this, "Please take a picture", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

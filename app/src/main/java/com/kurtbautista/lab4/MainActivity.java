@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                         r.setDescription(data.getStringExtra("desc"));
                         r.setComment(data.getStringExtra("comment"));
                         r.setFilename(data.getStringExtra("filename"));
+                        r.setThumbnail(data.getStringExtra("thumbnail"));
                         adapter.notifyDataSetChanged();
                         break;
                     default:
