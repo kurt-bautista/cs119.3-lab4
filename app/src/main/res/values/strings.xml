@@ -7,4 +7,6 @@
     <string name="price">Price</string>
     <string name="rating">Rating</string>
     <string name="save">Save</string>
+    <string name="newRev">Add a review</string>
+    <string name="clear">Clear reviews</string>
 </resources>

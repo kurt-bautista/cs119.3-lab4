@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private Activity context;
     private ArrayList<FoodReview> foodReviewList = new ArrayList<>();
     private FoodReviewAdapter adapter;
+    private final int NEW_REVIEW = 1;
+    private final int EDIT_REVIEW = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,30 +30,66 @@ public class MainActivity extends AppCompatActivity {
         lv.setAdapter(adapter);
     }
 
-    private void newReview(View v)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        switch (requestCode)
+        {
+            case NEW_REVIEW:
+                switch (resultCode)
+                {
+                    case RESULT_OK:
+                        foodReviewList.add((FoodReview) data.getSerializableExtra("review"));
+                        adapter.notifyDataSetChanged();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case EDIT_REVIEW:
+                switch (resultCode)
+                {
+                    case RESULT_OK:
+                        FoodReview r = foodReviewList.get(data.getIntExtra("review", 0));
+                        r.setName(data.getStringExtra("name"));
+                        r.setUser(data.getStringExtra("user"));
+                        r.setPrice(data.getDoubleExtra("price", 0));
+                        r.setRating(data.getIntExtra("rating", 0));
+                        r.setDescription(data.getStringExtra("desc"));
+                        r.setComment(data.getStringExtra("comment"));
+                        r.setFilename(data.getStringExtra("filename"));
+                        adapter.notifyDataSetChanged();
+                        break;
+                    default:
+                        break;
+                }
+        }
+    }
+
+    public void newReview(View v)
     {
         Intent i = new Intent(this, com.kurtbautista.lab4.NewEditReviewActivity.class);
         i.putExtra("action", "New food review");
-        startActivity(i);
-        adapter.notifyDataSetChanged();
+        startActivityForResult(i, NEW_REVIEW);
     }
 
-    private void openDescription(View v)
+    public void openDescription(View v)
     {
         DescriptionDialog d = new DescriptionDialog(this, foodReviewList.get((Integer)v.getTag()));
         d.show();
     }
 
-    private void editReview(View v)
+    public void editReview(View v)
     {
         Intent i = new Intent(this, com.kurtbautista.lab4.NewEditReviewActivity.class);
         i.putExtra("action", "Edit review");
         i.putExtra("review", foodReviewList.get((Integer)v.getTag()));
-        startActivity(i);
+        i.putExtra("pos", (Integer)v.getTag());
+        startActivityForResult(i, EDIT_REVIEW);
         adapter.notifyDataSetChanged();
     }
 
-    private void deleteReview(View v)
+    public void deleteReview(View v)
     {
         final View view = v;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -76,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void clearReviews(View v)
+    public void clearReviews(View v)
     {
         foodReviewList.clear();
         adapter.notifyDataSetChanged();

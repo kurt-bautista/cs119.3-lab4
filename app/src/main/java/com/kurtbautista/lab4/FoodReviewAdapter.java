@@ -27,12 +27,13 @@ public class FoodReviewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return foodReviews.size();
+        return foodReviews.size() + 1;
     }
 
     @Override
     public Object getItem(int i) {
-        return foodReviews.get(i);
+        if(i < foodReviews.size()) return foodReviews.get(i);
+        else return null;
     }
 
     @Override
@@ -42,33 +43,37 @@ public class FoodReviewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = context.getLayoutInflater().inflate(R.layout.review_row, null);
+        if(i < foodReviews.size()) {
+            View v = context.getLayoutInflater().inflate(R.layout.review_row, null);
 
-        ImageView img = (ImageView)v.findViewById(R.id.imageView);
-        TextView name = (TextView)v.findViewById(R.id.reviewByText);
-        TextView price = (TextView)v.findViewById(R.id.foodPriceText);
-        CheckBox[] rating = new CheckBox[] {(CheckBox)v.findViewById(R.id.oneCheckBox), (CheckBox)v.findViewById(R.id.twoCheckBox),
-                (CheckBox)v.findViewById(R.id.threeCheckBox), (CheckBox)v.findViewById(R.id.fourCheckBox), (CheckBox)v.findViewById(R.id.fiveCheckBox)};
-        Button description = (Button)v.findViewById(R.id.descriptionButton);
-        Button edit = (Button)v.findViewById(R.id.editButton);
-        Button delete = (Button)v.findViewById(R.id.deleteButton);
+            ImageView img = (ImageView) v.findViewById(R.id.imageView);
+            TextView name = (TextView) v.findViewById(R.id.foodNameText);
+            TextView user = (TextView) v.findViewById(R.id.reviewByText);
+            TextView price = (TextView) v.findViewById(R.id.foodPriceText);
+            CheckBox[] rating = new CheckBox[]{(CheckBox) v.findViewById(R.id.oneCheckBox), (CheckBox) v.findViewById(R.id.twoCheckBox),
+                    (CheckBox) v.findViewById(R.id.threeCheckBox), (CheckBox) v.findViewById(R.id.fourCheckBox), (CheckBox) v.findViewById(R.id.fiveCheckBox)};
+            Button description = (Button) v.findViewById(R.id.descriptionButton);
+            Button edit = (Button) v.findViewById(R.id.editButton);
+            Button delete = (Button) v.findViewById(R.id.deleteButton);
 
-        FoodReview review = foodReviews.get(i);
+            FoodReview review = foodReviews.get(i);
 
-        //img.setImageResource();
-        name.setText(review.getUser());
-        price.setText("Php " + review.getPrice());
-        for(int x = 0; x < review.getRating(); x++)
-        {
-            rating[x].setChecked(true);
+            //img.setImageResource();
+            name.setText(review.getName().toString());
+            user.setText(review.getUser().toString());
+            price.setText("Php " + review.getPrice());
+            for (int x = 0; x < review.getRating(); x++) {
+                rating[x].setChecked(true);
+            }
+
+            description.setTag(i);
+            edit.setTag(i);
+            delete.setTag(i);
+
+            return v;
         }
-
-        description.setTag(i);
-        edit.setTag(i);
-        delete.setTag(i);
-
-        return v;
-
-        //return null;
+        else {
+            return context.getLayoutInflater().inflate(R.layout.button_row, null);
+        }
     }
 }

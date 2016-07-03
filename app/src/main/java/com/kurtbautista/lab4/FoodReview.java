@@ -15,13 +15,15 @@ public class FoodReview implements Serializable {
     private String filename;
     private String comment;
 
-    public FoodReview(String name, String user, double price, String description, int rating)
+    public FoodReview(String name, String user, double price, String description, String comment, int rating, String filename)
     {
         this.name = name;
         this.user = user;
         this.price = price;
         this.description = description;
+        this.comment = comment;
         this.rating = rating;
+        this.filename = filename;
     }
 
     public String getName() {

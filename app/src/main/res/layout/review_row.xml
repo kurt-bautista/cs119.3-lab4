@@ -21,7 +21,7 @@
                 android:layout_height="130dp"
                 android:id="@+id/imageView"
                 android:layout_margin="20dp"
-                android:src="@drawable/imagePlaceholder"/>
+                android:src="@drawable/image_placeholder"/>
 
             <LinearLayout
                 android:orientation="vertical"
