@@ -175,8 +175,16 @@ public class NewEditReviewActivity extends AppCompatActivity {
                             data.putExtra("rating", index);
                             data.putExtra("desc", desc.getText().toString());
                             data.putExtra("comment", comment.getText().toString());
-                            data.putExtra("filename", outputFile.getAbsolutePath());
-                            data.putExtra("thumbnail", thumbNailFile.getAbsolutePath());
+                            try {
+                                data.putExtra("filename", outputFile.getAbsolutePath());
+                                data.putExtra("thumbnail", thumbNailFile.getAbsolutePath());
+                            }
+                            catch (NullPointerException e)
+                            {
+                                FoodReview review = (FoodReview) getIntent().getSerializableExtra("review");
+                                data.putExtra("filename", review.getFilename());
+                                data.putExtra("thumbnail", review.getThumbnail());
+                            }
                             setResult(RESULT_OK, data);
                             finish();
                             dialogInterface.dismiss();
