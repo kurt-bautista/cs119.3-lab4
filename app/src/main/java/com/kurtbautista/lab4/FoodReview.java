@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Student on 6/30/2016.
  */
-public class FoodReview extends RealmObject implements Serializable {
+public class FoodReview extends RealmObject {
 
     @PrimaryKey
     private String id;

@@ -250,17 +250,19 @@ public class NewEditReviewActivity extends AppCompatActivity {
                     });
             AlertDialog alert = builder.create();
             alert.show();
-        } else {
-            try {
-                /*FoodReview review = new FoodReview(name.getText().toString(), user.getText().toString(), Double.valueOf(price.getText().toString()), desc.getText().toString(), comment.getText().toString(), index, outputFile.getAbsolutePath());
-                review.setThumbnail(thumbNailFile.getAbsolutePath());
-                Intent data = new Intent();
-                data.putExtra("review", review);
-                setResult(RESULT_OK, data);*/
-                Realm realm = Realm.getDefaultInstance();
-                realm.executeTransactionAsync(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
+        }
+
+        else {
+            /*FoodReview review = new FoodReview(name.getText().toString(), user.getText().toString(), Double.valueOf(price.getText().toString()), desc.getText().toString(), comment.getText().toString(), index, outputFile.getAbsolutePath());
+            review.setThumbnail(thumbNailFile.getAbsolutePath());
+            Intent data = new Intent();
+            data.putExtra("review", review);
+            setResult(RESULT_OK, data);*/
+            Realm realm = Realm.getDefaultInstance();
+            realm.executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    try {
                         FoodReview review = realm.createObject(FoodReview.class);
                         review.setId(UUID.randomUUID().toString());
                         review.setName(name.getText().toString());
@@ -272,16 +274,16 @@ public class NewEditReviewActivity extends AppCompatActivity {
                         review.setFilename(outputFile.getAbsolutePath());
                         review.setThumbnail(thumbNailFile.getAbsolutePath());
                     }
-                });
+                    catch (NumberFormatException e) {
+                        Toast.makeText(NewEditReviewActivity.this, "Please input correct data type", Toast.LENGTH_SHORT).show();
+                    }
+                    catch (NullPointerException e) {
+                        Toast.makeText(NewEditReviewActivity.this, "Please take a picture", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
-                finish();
-            }
-            catch (NumberFormatException e) {
-                Toast.makeText(this, "Please input correct data type", Toast.LENGTH_SHORT).show();
-            }
-            catch (NullPointerException e) {
-                Toast.makeText(this, "Please take a picture", Toast.LENGTH_SHORT).show();
-            }
+            finish();
         }
     }
 }

@@ -10,4 +10,10 @@
     <string name="newRev">Add a review</string>
     <string name="clear">Clear reviews</string>
     <string name="more">More info</string>
+    <string name="login">LOGIN</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="remember">Remember Me</string>
+    <string name="sign_in">Sign In</string>
+    <string name="register">Register</string>
 </resources>
