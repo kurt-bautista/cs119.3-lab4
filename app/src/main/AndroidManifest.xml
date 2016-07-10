@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DescriptionDialog" />
-        <activity android:name=".NewEditReviewActivity"></activity>
+        <activity android:name=".NewEditReviewActivity" android:configChanges="orientation|screenSize"></activity>
     </application>
 
 </manifest>

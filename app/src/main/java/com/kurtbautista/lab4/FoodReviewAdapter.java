@@ -15,16 +15,24 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.RealmResults;
+
 /**
  * Created by Student on 6/30/2016.
  */
-public class FoodReviewAdapter extends BaseAdapter {
+public class FoodReviewAdapter extends RealmBaseAdapter<FoodReview> {
 
     private Activity context;
-    private ArrayList<FoodReview> foodReviews;
+    private RealmResults<FoodReview> foodReviews;
 
-    public FoodReviewAdapter(Activity context, ArrayList<FoodReview> foodReviews)
+    public FoodReviewAdapter(Activity context, RealmResults<FoodReview> foodReviews)
     {
+        super(context, foodReviews);
         this.context = context;
         this.foodReviews = foodReviews;
     }
@@ -35,7 +43,7 @@ public class FoodReviewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public FoodReview getItem(int i) {
         if(i < foodReviews.size()) return foodReviews.get(i);
         else return null;
     }
@@ -65,16 +73,16 @@ public class FoodReviewAdapter extends BaseAdapter {
             //Picasso.with(context).load(review.getThumbnail()).fit().into(img);
             Bitmap b = BitmapFactory.decodeFile(review.getThumbnail());
             img.setImageBitmap(b);
-            name.setText(review.getName().toString());
-            user.setText(review.getUser().toString());
+            name.setText(review.getName());
+            user.setText(review.getUser());
             price.setText("Php " + review.getPrice());
             for (int x = 0; x < review.getRating(); x++) {
                 rating[x].setChecked(true);
             }
 
-            description.setTag(i);
-            edit.setTag(i);
-            delete.setTag(i);
+            description.setTag(review.getId());
+            edit.setTag(review.getId());
+            delete.setTag(review.getId());
 
             return v;
         }

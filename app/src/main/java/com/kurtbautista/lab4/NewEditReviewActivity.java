@@ -24,12 +24,17 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.UUID;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 public class NewEditReviewActivity extends AppCompatActivity {
 
     private File outputFile;
     private File thumbNailFile;
-    private ArrayList<FoodReview> reviews;
+    //private ArrayList<FoodReview> reviews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +42,12 @@ public class NewEditReviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_edit_review);
         String action = getIntent().getStringExtra("action");
         setTitle(action);
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(realmConfig);
         if(action.equals("Edit review"))
         {
-            FoodReview review = (FoodReview) getIntent().getSerializableExtra("review");
+            //region old implementation
+            /*FoodReview review = (FoodReview) getIntent().getSerializableExtra("review");
             EditText name = (EditText)findViewById(R.id.foodName);
             EditText user = (EditText)findViewById(R.id.userName);
             EditText price = (EditText)findViewById(R.id.foodPrice);
@@ -56,6 +64,28 @@ public class NewEditReviewActivity extends AppCompatActivity {
             comment.setText(review.getComment());
             rds[review.getRating() - 1].setChecked(true);
 
+            Bitmap b = BitmapFactory.decodeFile(review.getFilename());
+            img.setImageBitmap(b);*/
+            //endregion
+
+            Realm realm = Realm.getDefaultInstance();
+            FoodReview review = realm.where(FoodReview.class).equalTo("id", getIntent().getStringExtra("id")).findFirst();
+
+            EditText name = (EditText)findViewById(R.id.foodName);
+            EditText user = (EditText)findViewById(R.id.userName);
+            EditText price = (EditText)findViewById(R.id.foodPrice);
+            EditText desc = (EditText)findViewById(R.id.description);
+            EditText comment = (EditText)findViewById(R.id.comment);
+            ImageButton img = (ImageButton)findViewById(R.id.changeImageButton);
+            RadioButton[] rds = new RadioButton[] {(RadioButton)findViewById(R.id.radioButton), (RadioButton)findViewById(R.id.radioButton2), (RadioButton)findViewById(R.id.radioButton3),
+                    (RadioButton)findViewById(R.id.radioButton4), (RadioButton)findViewById(R.id.radioButton5)};
+
+            name.setText(review.getName());
+            user.setText(review.getUser());
+            price.setText(String.valueOf(review.getPrice()));
+            desc.setText(review.getDescription());
+            comment.setText(review.getComment());
+            rds[review.getRating() - 1].setChecked(true);
             Bitmap b = BitmapFactory.decodeFile(review.getFilename());
             img.setImageBitmap(b);
         }
@@ -167,7 +197,7 @@ public class NewEditReviewActivity extends AppCompatActivity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent data = new Intent();
+                            /*Intent data = new Intent();
                             data.putExtra("review", getIntent().getIntExtra("pos", -1));
                             data.putExtra("name", name.getText().toString());
                             data.putExtra("user", user.getText().toString());
@@ -185,7 +215,28 @@ public class NewEditReviewActivity extends AppCompatActivity {
                                 data.putExtra("filename", review.getFilename());
                                 data.putExtra("thumbnail", review.getThumbnail());
                             }
-                            setResult(RESULT_OK, data);
+                            setResult(RESULT_OK, data);*/
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.executeTransactionAsync(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    FoodReview review = realm.where(FoodReview.class).equalTo("id", getIntent().getStringExtra("id")).findFirst();
+                                    review.setName(name.getText().toString());
+                                    review.setUser(user.getText().toString());
+                                    review.setPrice(Double.valueOf(price.getText().toString()));
+                                    review.setRating(index);
+                                    review.setDescription(desc.getText().toString());
+                                    review.setComment(comment.getText().toString());
+                                    try {
+                                        review.setFilename(outputFile.getAbsolutePath());
+                                        review.setThumbnail(thumbNailFile.getAbsolutePath());
+                                    }
+                                    catch (NullPointerException e)
+                                    {
+                                        //do nothing
+                                    }
+                                }
+                            });
                             finish();
                             dialogInterface.dismiss();
                         }
@@ -201,15 +252,32 @@ public class NewEditReviewActivity extends AppCompatActivity {
             alert.show();
         } else {
             try {
-                FoodReview review = new FoodReview(name.getText().toString(), user.getText().toString(), Double.valueOf(price.getText().toString()), desc.getText().toString(), comment.getText().toString(), index, outputFile.getAbsolutePath());
+                /*FoodReview review = new FoodReview(name.getText().toString(), user.getText().toString(), Double.valueOf(price.getText().toString()), desc.getText().toString(), comment.getText().toString(), index, outputFile.getAbsolutePath());
                 review.setThumbnail(thumbNailFile.getAbsolutePath());
                 Intent data = new Intent();
                 data.putExtra("review", review);
-                setResult(RESULT_OK, data);
+                setResult(RESULT_OK, data);*/
+                Realm realm = Realm.getDefaultInstance();
+                realm.executeTransactionAsync(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        FoodReview review = realm.createObject(FoodReview.class);
+                        review.setId(UUID.randomUUID().toString());
+                        review.setName(name.getText().toString());
+                        review.setUser(user.getText().toString());
+                        review.setPrice(Double.valueOf(price.getText().toString()));
+                        review.setDescription(desc.getText().toString());
+                        review.setComment(comment.getText().toString());
+                        review.setRating(index);
+                        review.setFilename(outputFile.getAbsolutePath());
+                        review.setThumbnail(thumbNailFile.getAbsolutePath());
+                    }
+                });
+
                 finish();
             }
             catch (NumberFormatException e) {
-                Toast.makeText(this, "All fields needed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please input correct data type", Toast.LENGTH_SHORT).show();
             }
             catch (NullPointerException e) {
                 Toast.makeText(this, "Please take a picture", Toast.LENGTH_SHORT).show();

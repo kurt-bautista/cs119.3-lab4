@@ -2,11 +2,16 @@ package com.kurtbautista.lab4;
 
 import java.io.Serializable;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Student on 6/30/2016.
  */
-public class FoodReview implements Serializable {
+public class FoodReview extends RealmObject implements Serializable {
 
+    @PrimaryKey
+    private String id;
     private String name;
     private String user;
     private double price;
@@ -16,7 +21,7 @@ public class FoodReview implements Serializable {
     private String comment;
     private String thumbnail;
 
-    public FoodReview(String name, String user, double price, String description, String comment, int rating, String filename)
+    /*public FoodReview(String name, String user, double price, String description, String comment, int rating, String filename)
     {
         this.name = name;
         this.user = user;
@@ -25,6 +30,14 @@ public class FoodReview implements Serializable {
         this.comment = comment;
         this.rating = rating;
         this.filename = filename;
+    }*/
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
