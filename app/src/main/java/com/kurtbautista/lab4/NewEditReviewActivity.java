@@ -34,6 +34,7 @@ public class NewEditReviewActivity extends AppCompatActivity {
 
     private File outputFile;
     private File thumbNailFile;
+    private User currentUser;
     //private ArrayList<FoodReview> reviews;
 
     @Override
@@ -42,8 +43,13 @@ public class NewEditReviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_edit_review);
         String action = getIntent().getStringExtra("action");
         setTitle(action);
+        //currentUser = (User)getIntent().getSerializableExtra("user");
+
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
         Realm.setDefaultConfiguration(realmConfig);
+        Realm realm = Realm.getDefaultInstance();
+        currentUser = realm.where(User.class).equalTo("id", getIntent().getStringExtra("user")).findFirst();
+        ((EditText)findViewById(R.id.userName)).setText(currentUser.getUsername());
         if(action.equals("Edit review"))
         {
             //region old implementation
@@ -68,7 +74,7 @@ public class NewEditReviewActivity extends AppCompatActivity {
             img.setImageBitmap(b);*/
             //endregion
 
-            Realm realm = Realm.getDefaultInstance();
+            //Realm realm = Realm.getDefaultInstance();
             FoodReview review = realm.where(FoodReview.class).equalTo("id", getIntent().getStringExtra("id")).findFirst();
 
             EditText name = (EditText)findViewById(R.id.foodName);
@@ -217,12 +223,12 @@ public class NewEditReviewActivity extends AppCompatActivity {
                             }
                             setResult(RESULT_OK, data);*/
                             Realm realm = Realm.getDefaultInstance();
-                            realm.executeTransactionAsync(new Realm.Transaction() {
+                            realm.executeTransaction(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
                                     FoodReview review = realm.where(FoodReview.class).equalTo("id", getIntent().getStringExtra("id")).findFirst();
                                     review.setName(name.getText().toString());
-                                    review.setUser(user.getText().toString());
+                                    review.setUser(currentUser.getUsername());
                                     review.setPrice(Double.valueOf(price.getText().toString()));
                                     review.setRating(index);
                                     review.setDescription(desc.getText().toString());
@@ -259,14 +265,14 @@ public class NewEditReviewActivity extends AppCompatActivity {
             data.putExtra("review", review);
             setResult(RESULT_OK, data);*/
             Realm realm = Realm.getDefaultInstance();
-            realm.executeTransactionAsync(new Realm.Transaction() {
+            realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
                     try {
                         FoodReview review = realm.createObject(FoodReview.class);
                         review.setId(UUID.randomUUID().toString());
                         review.setName(name.getText().toString());
-                        review.setUser(user.getText().toString());
+                        review.setUser(currentUser.getUsername());
                         review.setPrice(Double.valueOf(price.getText().toString()));
                         review.setDescription(desc.getText().toString());
                         review.setComment(comment.getText().toString());

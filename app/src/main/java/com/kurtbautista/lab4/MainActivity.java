@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private Activity context;
 //    private RealmList<FoodReview> foodReviewList = new RealmList<>();
     private FoodReviewAdapter adapter;
+    private User currentUser;
 //    private final int NEW_REVIEW = 1;
 //    private final int EDIT_REVIEW = 2;
 
@@ -41,10 +42,12 @@ public class MainActivity extends AppCompatActivity {
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
         Realm.setDefaultConfiguration(realmConfig);
         Realm realm = Realm.getDefaultInstance();
+        setTitle("Food Reviews");
         ListView lv = (ListView)findViewById(R.id.reviewsListView);
         RealmResults<FoodReview> results = realm.where(FoodReview.class).findAll();
         adapter = new FoodReviewAdapter(this, results);
         lv.setAdapter(adapter);
+        currentUser = realm.where(User.class).equalTo("id", getIntent().getStringExtra("user")).findFirst();
     }
 
     /*@Override
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent i = new Intent(this, com.kurtbautista.lab4.NewEditReviewActivity.class);
         i.putExtra("action", "New food review");
+        i.putExtra("user", currentUser.getId());
         startActivity(i);
     }
 
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra("action", "Edit review");
         //i.putExtra("review", foodReviewList.get((Integer)v.getTag()));
         i.putExtra("id", (String)v.getTag());
+        i.putExtra("user", currentUser.getId());
         startActivity(i);
         adapter.notifyDataSetChanged();
     }

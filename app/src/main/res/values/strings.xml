@@ -3,7 +3,7 @@
     <string name="description_label">Description</string>
     <string name="comment_label">Comment</string>
     <string name="name">Name</string>
-    <string name="user">Review by</string>
+    <string name="user">Last edited by</string>
     <string name="price">Price</string>
     <string name="rating">Rating</string>
     <string name="save">Save</string>
@@ -16,4 +16,5 @@
     <string name="remember">Remember Me</string>
     <string name="sign_in">Sign In</string>
     <string name="register">Register</string>
+    <string name="repeat">Repeat password</string>
 </resources>
